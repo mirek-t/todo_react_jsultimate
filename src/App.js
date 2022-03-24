@@ -7,6 +7,9 @@ import uuidGen from "./utils/uuid";
 import Headline from "./components/Headline";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
+import ItemsLeft from "./components/ItemsLeft";
+import Filters from "./components/Filters";
+import ClearCompleted from "./components/ClearCompleted";
 
 function App() {
   const [value, setValue] = useState("");
@@ -76,22 +79,9 @@ function App() {
             handleDeleteTask={handleDeleteTask}
             selection={selection}
           />
-          {/*TODO move to separate component */}
-          <p>{tasks.filter((e) => !e.status).length} items left</p>
-
-          {/*TODO move to separate component */}
-          <div>
-            <button onClick={() => setSelection("all")}>All</button>
-            <button onClick={() => setSelection(false)}>Active</button>
-            <button onClick={() => setSelection(true)}>Completed</button>
-          </div>
-
-          {/*TODO move to separate component */}
-          {tasks.filter((e) => e.status).length > 0 ? (
-            <button onClick={handleDeleteDone}>Clear Completed</button>
-          ) : (
-            ""
-          )}
+          <ItemsLeft tasks={tasks} />
+          <Filters setSelection={setSelection} />
+          <ClearCompleted tasks={tasks} handleDeleteDone={handleDeleteDone} />
         </>
       )}
     </div>
