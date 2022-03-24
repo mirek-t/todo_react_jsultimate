@@ -1,5 +1,6 @@
 import "./App.css";
 import { useEffect, useState } from "react";
+
 import { loadFromLocalStorage, saveToLocalStorage } from "./utils/localstorage";
 import uuidGen from "./utils/uuid";
 
@@ -10,6 +11,7 @@ import TaskList from "./components/TaskList";
 function App() {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [selection, setSelection] = useState("all");
 
   useEffect(() => {
     setTasks(loadFromLocalStorage("tds"));
@@ -25,15 +27,14 @@ function App() {
 
   const handleKeyUp = (event) => {
     if (event.key === "Enter") {
-      const newTask = [
-        ...tasks,
+      setTasks([
         {
           name: value,
           id: uuidGen(),
           status: false,
         },
-      ];
-      setTasks(newTask);
+        ...tasks,
+      ]);
       setValue("");
     }
   };
@@ -53,6 +54,10 @@ function App() {
     setTasks(tasks.filter((task) => task.id !== id));
   }
 
+  function handleDeleteDone() {
+    setTasks(tasks.filter((task) => !task.status));
+  }
+
   return (
     <div className="App">
       <Headline />
@@ -61,11 +66,34 @@ function App() {
         handleChange={handleChange}
         handleKeyUp={handleKeyUp}
       />
-      <TaskList
-        tasks={tasks}
-        handleDeleteTask={handleDeleteTask}
-        handleChangeStatus={handleChangeStatus}
-      />
+      {tasks.length === 0 ? (
+        ""
+      ) : (
+        <>
+          <TaskList
+            tasks={tasks}
+            handleChangeStatus={handleChangeStatus}
+            handleDeleteTask={handleDeleteTask}
+            selection={selection}
+          />
+          {/*TODO move to separate component */}
+          <p>{tasks.filter((e) => !e.status).length} items left</p>
+
+          {/*TODO move to separate component */}
+          <div>
+            <button onClick={() => setSelection("all")}>All</button>
+            <button onClick={() => setSelection(false)}>Active</button>
+            <button onClick={() => setSelection(true)}>Completed</button>
+          </div>
+
+          {/*TODO move to separate component */}
+          {tasks.filter((e) => e.status).length > 0 ? (
+            <button onClick={handleDeleteDone}>Clear Completed</button>
+          ) : (
+            ""
+          )}
+        </>
+      )}
     </div>
   );
 }
