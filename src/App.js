@@ -18,6 +18,7 @@ import {
   deleteDoc,
   doc,
   writeBatch,
+  onSnapshot,
 } from "firebase/firestore";
 
 function App() {
@@ -25,27 +26,20 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [selection, setSelection] = useState("all");
 
-  const getData = async () => {
-    const querySnapshot = await getDocs(collection(db, "todos"));
-    setTasks(
-      querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
-    );
-  };
-
   useEffect(() => {
-    getData();
+    const unsubscribe = onSnapshot(collection(db, "todos"), (snapshot) => {
+      setTasks(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+      );
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
-
-  useEffect(() => {
-    setTasks(loadFromLocalStorage("tds"));
-  }, []);
-
-  useEffect(() => {
-    saveToLocalStorage("tds", tasks);
-  }, [tasks]);
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -53,36 +47,14 @@ function App() {
 
   const handleKeyUp = async (event) => {
     if (event.key === "Enter") {
-      const newTodo = {
+      await addDoc(collection(db, "todos"), {
         name: value,
         status: false,
-      };
+      });
 
-      const docRef = await addDoc(collection(db, "todos"), newTodo);
-
-      setTasks([
-        Object.assign(newTodo, {
-          id: docRef.id,
-        }),
-        ...tasks,
-      ]);
       setValue("");
     }
   };
-
-  async function handleChangeStatus(id) {
-    const newTasks = tasks.filter((task) => task.id === id)[0];
-    newTasks.status = !newTasks.status;
-
-    await updateDoc(doc(db, "todos", id), { status: newTasks.status });
-
-    setTasks([...tasks]);
-  }
-
-  async function handleDeleteTask(id) {
-    await deleteDoc(doc(db, "todos", id));
-    setTasks(tasks.filter((task) => task.id !== id));
-  }
 
   async function handleDeleteDone() {
     const batch = writeBatch(db);
@@ -95,8 +67,6 @@ function App() {
     });
 
     await batch.commit();
-
-    setTasks(tasks.filter((task) => !task.status));
   }
 
   return (
@@ -111,12 +81,7 @@ function App() {
         ""
       ) : (
         <>
-          <TaskList
-            tasks={tasks}
-            handleChangeStatus={handleChangeStatus}
-            handleDeleteTask={handleDeleteTask}
-            selection={selection}
-          />
+          <TaskList tasks={tasks} selection={selection} />
           <ItemsLeft tasks={tasks} />
           <Filters setSelection={setSelection} />
           <ClearCompleted tasks={tasks} handleDeleteDone={handleDeleteDone} />
