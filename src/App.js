@@ -10,11 +10,27 @@ import TaskList from "./components/TaskList";
 import ItemsLeft from "./components/ItemsLeft";
 import Filters from "./components/Filters";
 import ClearCompleted from "./components/ClearCompleted";
+import { db } from "./firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 function App() {
   const [value, setValue] = useState("");
   const [tasks, setTasks] = useState([]);
   const [selection, setSelection] = useState("all");
+
+  const getData = async () => {
+    const querySnapshot = await getDocs(collection(db, "todos"));
+    setTasks(
+      querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+    );
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   useEffect(() => {
     setTasks(loadFromLocalStorage("tds"));
