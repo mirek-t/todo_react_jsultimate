@@ -1,0 +1,91 @@
+@import "utils";
+
+.hdl {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: toRem(100);
+  font-weight: 100;
+  color: rgba(175, 47, 47, 0.15);
+  text-align: center;
+  margin: 0;
+}
+
+.container {
+  box-shadow: 0 2px 4px 0 rgba(0 0 0 / 20%), 0 25px 50px 0 rgba(0 0 0 / 10%);
+  width: 100%;
+  max-width: toRem(550);
+  margin: auto;
+  background-color: white;
+}
+
+.input {
+  font-size: toRem(24);
+  padding: toRem(16) toRem(16) toRem(16) toRem(60);
+  border: 0;
+  box-shadow: inset 0 -2px 1px rgb(0 0 0 / 3%);
+  outline: 0;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  color: #4d4d4d;
+  background-color: rgba(0, 0, 0, 0.003);
+
+  &::placeholder {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #e6e6e6;
+    font-weight: 300;
+    font-style: italic;
+  }
+}
+
+.status {
+  display: inline-block;
+  height: toRem(20);
+  width: toRem(20);
+  border-radius: 50%;
+  border: toRem(1) solid rgba(0, 0, 0, 0.1);
+  margin: toRem(2);
+  cursor: pointer;
+  align-items: center;
+}
+
+.active {
+  background: white;
+}
+
+.done {
+  background: rgba(147, 209, 147, 0.822);
+}
+
+ul {
+  list-style: none;
+  text-align: center;
+  padding-left: 0;
+  color: #4d4d4d;
+}
+
+.todo-item {
+  display: flex;
+  align-items: stretch;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  color: #4d4d4d;
+  padding: toRem(15);
+  font-size: toRem(24);
+  border-bottom: toRem(1) solid rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.todo-item button {
+  opacity: 0;
+  transition: opacity 400ms;
+  color: #4d4d4d;
+  right: toRem(1);
+}
+
+.todo-item:hover button {
+  opacity: 1;
+  color: #4d4d4d;
+}

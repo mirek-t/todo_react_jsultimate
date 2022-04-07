@@ -72,21 +72,24 @@ function App() {
   return (
     <div className="App">
       <Headline />
-      <TaskInput
-        value={value}
-        handleChange={handleChange}
-        handleKeyUp={handleKeyUp}
-      />
-      {tasks.length === 0 ? (
-        ""
-      ) : (
-        <>
-          <TaskList tasks={tasks} selection={selection} />
-          <ItemsLeft tasks={tasks} />
-          <Filters setSelection={setSelection} />
-          <ClearCompleted tasks={tasks} handleDeleteDone={handleDeleteDone} />
-        </>
-      )}
+      <div className="container">
+        <TaskInput
+          value={value}
+          handleChange={handleChange}
+          handleKeyUp={handleKeyUp}
+          placeholder="What needs to be done?"
+        />
+        {tasks.length === 0 ? (
+          ""
+        ) : (
+          <>
+            <TaskList tasks={tasks} selection={selection} />
+            <ItemsLeft tasks={tasks} />
+            <Filters setSelection={setSelection} />
+            <ClearCompleted tasks={tasks} handleDeleteDone={handleDeleteDone} />
+          </>
+        )}
+      </div>
     </div>
   );
 }

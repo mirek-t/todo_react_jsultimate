@@ -1,5 +1,5 @@
 const Headline = () => {
-  return <h1>todos</h1>;
+  return <h1 className="hdl">todos</h1>;
 };
 
 export default Headline;
