@@ -1,7 +1,7 @@
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-const TaskItem = ({ id, status, name, handleChangeStatus }) => {
+const TaskItem = ({ id, status, name }) => {
   async function handleDeleteTask() {
     await deleteDoc(doc(db, "todos", id));
   }
@@ -13,11 +13,11 @@ const TaskItem = ({ id, status, name, handleChangeStatus }) => {
   return (
     <li className="todo-item">
       <span
-        onClick={handleChangeStatus}
         className={status ? "status done" : "status active"}
+        onClick={handleChangeStatus}
       />
-      {name}
-      <button onClick={() => handleDeleteTask(id)}>x</button>
+      <span>{name}</span>
+      <button onClick={handleDeleteTask}>x</button>
     </li>
   );
 };
